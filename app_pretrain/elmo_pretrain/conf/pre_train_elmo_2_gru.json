@@ -1,0 +1,77 @@
+{
+    "global":{
+        "training_mode": "predict_next",
+        "n_gpus": 1,
+        "n_train_tokens": 51,
+        "max_len_left": 20,
+        "save_json_dir": "./model/pre_train_elmo_2_gru/options.json",
+        "model_path": "./model/pre_train_elmo_2_gru",
+        "model_prefix": "2LayerGru",
+        "shuffle": 1
+    },
+
+    "transform":{
+        "transform_py": "./tfnlp/transforms/transform",
+        "transform_class": "Elmo4PairData"
+    },
+
+    "block":{
+        "option_file": "./data/hdf5/options.json",
+        "weight_file": "./data/hdf5/lm_weights.hdf5",
+        "embedding_weight_file": "./data/hdf5/lm_weights.hdf5"
+    },
+
+    "model":{
+        "net_py": "./tfnlp/nets/elmo/pretrained",
+        "net_class": "ElmoGru",
+        "bidirectional": true,
+        "dropout": 0.5,
+        "dim": 256,
+        "n_layers": 2,
+        "projection_dim": 100,
+        "use_skip_connections": true,
+        "all_clip_norm_val": 10.0,
+        "n_tokens_vocab": 964758,
+        "unroll_steps": 20,
+        "n_negative_samples_batch": 1,
+        "word_emb_file": "/Users/admin/Desktop/git/oceanus-bot-model/data/pretrained/glove100d.txt"
+    },
+
+    "loss":{
+        "loss_py": "./tfnlp/layers/loss_layer",
+        "loss_class": "BiSampledSoftmaxLoss"
+    },
+
+    "trainer":{
+        "trainer_py": "./tfnlp/trainers/trainer",
+        "trainer_class": "StandardTrainer",
+        "restart_ckpt_file": null,
+        "batch_size": 1,
+        "num_epochs": 4,
+        "thread_num": 6,
+        "print_iter": 1,
+        "early_stop_threshold": 5000
+    },
+
+    "optimizer":{
+        "optimizer_py": "./tfnlp/optimizers/adagrad",
+        "optimizer_class": "AdagradOptimizer",
+        "learning_rate": 1e-4,
+        "initial_accumulator_value": 1.0
+    },
+
+    "train_data":{
+        "train_file": "./task/elmo_pretrain/data/tf_record",
+        "data_size": 4,
+        "token_ids" : [["token_ids", 20]],
+        "token_ids_reverse" : [["token_ids_reverse", 20]],
+        "next_token_ids_reverse" : [["next_token_ids_reverse", 20]],
+        "next_token_ids" : [["next_token_ids", 20]]
+
+    },
+
+    "dev_data":{
+        "dev_file": "./data/pretrain/dev_tfrecord",
+        "dev_data_size": 4
+    }
+}
